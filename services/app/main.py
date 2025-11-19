@@ -5,6 +5,8 @@ from starlette.middleware.cors import CORSMiddleware
 
 from services.app.config import app_configs, settings
 
+from products.routes import router as product_router
+
 
 @asynccontextmanager
 async def lifespan(_application: FastAPI) -> AsyncGenerator:
@@ -27,3 +29,10 @@ app.add_middleware(
     allow_methods=("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"),
     allow_headers=settings.CORS_HEADERS,
 )
+
+app.include_router(product_router, prefix="/products", tags=["Product"])
+
+
+@app.get("/healthcheck", include_in_schema=False)
+async def healthcheck() -> dict[str, str]:
+    return {"status": "ok"}
