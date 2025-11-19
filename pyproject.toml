@@ -4,4 +4,10 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = [
+    "aws-cdk-lib>=2.225.0",
+    "boto3>=1.40.37",
+    "fastapi>=0.117.1",
+    "pydantic>=2.11.9",
+    "pydantic-settings>=2.10.1",
+]
