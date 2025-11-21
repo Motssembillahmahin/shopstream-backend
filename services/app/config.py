@@ -1,10 +1,8 @@
-from pathlib import Path
 from typing import Any
 
-from pydantic import DirectoryPath, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from constants import Environment
+from services.app.constants import Environment
 
 
 class CustomBaseSettings(BaseSettings):
@@ -16,23 +14,13 @@ class CustomBaseSettings(BaseSettings):
 
 
 class Config(CustomBaseSettings):
-    BASE_DIR: DirectoryPath = Path(__file__).resolve().parent.parent
-    TEMPLATES_DIR: DirectoryPath = BASE_DIR / "src" / "templates"
-
-    ENVIRONMENT: Environment = Environment.PRODUCTION
+    ENVIRONMENT: Environment = Environment.LOCAL
 
     CORS_ORIGINS: list[str] = ["*"]
     CORS_ORIGINS_REGEX: str | None = None
     CORS_HEADERS: list[str] = ["*"]
 
     APP_VERSION: str = "0.1"
-
-    @model_validator(mode="after")
-    def validate_sentry_non_local(self) -> "Config":
-        if self.ENVIRONMENT.is_deployed and not self.SENTRY_DSN:
-            raise ValueError("Sentry is not set")
-
-        return self
 
 
 settings = Config()
