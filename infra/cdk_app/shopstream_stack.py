@@ -22,9 +22,9 @@ class ShopStreamStack(Stack):
             removal_policy=ddb.RemovalPolicy.RETAIN,
             billing_mode=ddb.BillingMode.PAY_PER_REQUEST,
             encryption=ddb.TableEncryption.AWS_MANAGED,
+            point_in_time_recovery=True,
         )
 
-        # Example GSI
         table.add_global_secondary_index(
             index_name="GSI1-EventsByDay",
             partition_key=ddb.Attribute(name="GSI1PK", type=ddb.AttributeType.STRING),
@@ -32,7 +32,6 @@ class ShopStreamStack(Stack):
             projection_type=ddb.ProjectionType.ALL,
         )
 
-        # Lambda that processes streams
         stream_lambda = _lambda.Function(
             self,
             "StreamProcessorFn",
@@ -42,12 +41,9 @@ class ShopStreamStack(Stack):
             timeout=Duration.seconds(30),
             environment={"TABLE_NAME": table.table_name},
         )
-
-        # Grant the lambda permissions to read/write the table
         table.grant_read_write_data(stream_lambda)
 
-        # connect dynamodb stream to lambda
-        stream_lambda_event_source = _lambda.EventSourceMapping(
+        stream_lambda_event_source = _lambda.EventSourceMapping(  # noqa: F841
             self,
             "DDBStreamMapping",
             target=stream_lambda,
@@ -69,4 +65,4 @@ class ShopStreamStack(Stack):
         )
         table.grant_read_write_data(api_lambda)
 
-        api = apigw.LambdaRestApi(self, "ShopStreamApi", handler=api_lambda, proxy=True)
+        api = apigw.LambdaRestApi(self, "ShopStreamApi", handler=api_lambda, proxy=True)  # noqa: F841
