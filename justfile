@@ -2,22 +2,13 @@ default:
   just --list
 
 run *args:
-  uvicorn src.main:app --reload {{args}}
-
-mm *args:
-  alembic revision --autogenerate -m "{{args}}"
-
-migrate:
-  alembic upgrade head
-
-downgrade *args:
-  alembic downgrade {{args}}
+  uvicorn app.main:app --reload {{args}}
 
 ruff *args:
-  ruff check {{args}} src
+  ruff check {{args}} app
 
 lint:
-  ruff format src
+  ruff format app
   just ruff --fix
 
 # docker
