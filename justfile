@@ -2,7 +2,7 @@ default:
   just --list
 
 run *args:
-  uvicorn app.main:app --reload {{args}}
+  uvicorn services.app.main:app --reload {{args}}
 
 ruff *args:
   ruff check {{args}} app
