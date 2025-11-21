@@ -5,7 +5,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from services.app.config import app_configs, settings
 
-from products.routes import router as product_router
+from services.app.products.routes import router as product_router
 
 
 @asynccontextmanager
